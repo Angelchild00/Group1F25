@@ -1,5 +1,4 @@
 # Group1F25 – SafeDrive App  
-Phase 2 Submission for SENG71000  
 
 ## Overview  
 SafeDrive is a mobile-based driver behavior monitoring system that uses smartphone sensors to assess driving habits and generate safety scores.  
