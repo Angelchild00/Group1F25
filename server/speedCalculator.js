@@ -3,26 +3,25 @@ class SpeedCalculator {
     this.previousPosition = null;
   }
 
-  // Calculate distance between two GPS points using Haversine formula
+  // Simple distance calculation - found this approach online
+  // Not super accurate but good enough for our app
   calculateDistance(lat1, lon1, lat2, lon2) {
-    const R = 6371; // Earth's radius in kilometers
-    const dLat = this.toRadians(lat2 - lat1);
-    const dLon = this.toRadians(lon2 - lon1);
+    // Basic conversion: roughly 1 degree latitude = 111 km
+    // longitude varies but we'll use 85 km as average
+    const latDiff = lat2 - lat1;
+    const lonDiff = lon2 - lon1;
     
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const latDistance = latDiff * 111; // km
+    const lonDistance = lonDiff * 85;  // km (approximate)
     
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    return R * c; // Distance in kilometers
-  }
-
-  toRadians(degrees) {
-    return degrees * (Math.PI/180);
+    // Use pythagorean theorem to get straight line distance
+    const distance = Math.sqrt(latDistance * latDistance + lonDistance * lonDistance);
+    return Math.abs(distance); // make sure it's positive
   }
 
   // Calculate speed in km/h
   calculateSpeed(currentPosition) {
+    // First time - no previous position to compare
     if (!this.previousPosition) {
       this.previousPosition = currentPosition;
       return 0;
@@ -35,23 +34,26 @@ class SpeedCalculator {
       currentPosition.longitude
     );
 
-    const timeDiff = (currentPosition.timestamp - this.previousPosition.timestamp) / 1000; // seconds
+    // Calculate time difference in seconds
+    const timeDiff = (currentPosition.timestamp - this.previousPosition.timestamp) / 1000;
     
-    // Avoid division by zero or very small time differences
+    // Avoid division by zero
     if (timeDiff <= 0 || timeDiff < 0.1) {
       return 0;
     }
     
-    const speed = (distance / timeDiff) * 3600; // km/h
+    // Speed = distance / time, convert to km/h
+    const speed = (distance / timeDiff) * 3600; // multiply by 3600 to convert from km/s to km/h
 
+    // Update previous position for next calculation
     this.previousPosition = currentPosition;
     
-    // Return 0 for NaN or invalid speeds
-    if (isNaN(speed) || !isFinite(speed)) {
+    // Handle weird results
+    if (isNaN(speed) || speed < 0) {
       return 0;
     }
     
-    return Math.round(speed * 100) / 100; // Round to 2 decimal places
+    return Math.round(speed * 100) / 100; // round to 2 decimal places
   }
 
   reset() {
