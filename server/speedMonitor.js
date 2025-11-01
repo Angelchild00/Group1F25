@@ -1,29 +1,11 @@
 class SpeedMonitor {
-  constructor() {
+  constructor(gpsListener, speedCalculator) {
     this.isMonitoring = false;
     this.speedHistory = [];
     this.speedLimit = 60; // km/h default speed limit
     this.alertThreshold = 80; // km/h dangerous speed threshold
-    this.readingCount = 0;
-  }
-
-  generateRealisticSpeed() {
-    this.readingCount++;
-    
-    // Demo scenario: speed over 100 for 5 readings, then back to normal
-    if (this.readingCount >= 8 && this.readingCount <= 12) {
-      // High speed phase (readings 8-12)
-      return 105 + Math.random() * 15; // 105-120 km/h
-    } else if (this.readingCount <= 3) {
-      // Starting slow
-      return 15 + Math.random() * 20; // 15-35 km/h
-    } else if (this.readingCount <= 7) {
-      // Normal acceleration
-      return 40 + Math.random() * 30; // 40-70 km/h
-    } else {
-      // Back to normal after high speed
-      return 45 + Math.random() * 25; // 45-70 km/h
-    }
+    this.gpsListener = gpsListener;
+    this.speedCalculator = speedCalculator;
   }
 
   logSpeedData(position, speed) {
@@ -67,36 +49,20 @@ class SpeedMonitor {
     if (this.isMonitoring) return;
     
     this.isMonitoring = true;
-    this.readingCount = 0;
-    console.log("Speed monitoring started...");
-    console.log("Demo scenario: Normal driving -> Dangerous speeding -> Back to normal");
+    console.log("Speed monitoring started using real GPS data...");
     
-    // Realistic GPS updates every 2 seconds
-    this.monitorInterval = setInterval(() => {
-      // Generate realistic speed
-      const speed = Math.round(this.generateRealisticSpeed() * 10) / 10;
-      
-      // Generate realistic position changes based on speed
-      const distanceKm = (speed / 3600) * 2; // distance in 2 seconds
-      const latChange = (distanceKm / 111) * (Math.random() - 0.5) * 2;
-      const lngChange = (distanceKm / 85) * (Math.random() - 0.5) * 2;
-      
-      const mockPosition = {
-        latitude: 37.7749 + latChange,
-        longitude: -122.4194 + lngChange,
-        timestamp: Date.now()
-      };
-      
-      this.logSpeedData(mockPosition, speed);
-      
-    }, 2000);
+    // Start GPS listening and calculate speed from real position changes
+    this.gpsListener.startListening((position) => {
+      const speed = this.speedCalculator.calculateSpeed(position);
+      this.logSpeedData(position, speed);
+    });
   }
 
   stopMonitoring() {
     if (!this.isMonitoring) return;
     
     this.isMonitoring = false;
-    clearInterval(this.monitorInterval);
+    this.gpsListener.stopListening();
     console.log("Speed monitoring stopped");
     this.showSpeedSummary();
   }
