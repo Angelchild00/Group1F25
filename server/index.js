@@ -7,7 +7,7 @@ const PORT = 3000;
 const gpsListener = new GPSListener();
 
 app.get('/', (req, res) => {
-  res.send('Group 1F25 server is running 🚗💨');
+  res.send('Group 1F25 server is running');
 });
 
 app.get('/gps/current', (req, res) => {
