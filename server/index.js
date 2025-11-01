@@ -7,7 +7,7 @@ const PORT = 3000;
 const speedCalculator = new SpeedCalculator();
 
 app.get('/', (req, res) => {
-  res.send('Group 1F25 server is running 🚗💨');
+  res.send('Group 1F25 server is running');
 });
 
 app.get('/speed/calculate', (req, res) => {
