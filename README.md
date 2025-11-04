@@ -14,11 +14,11 @@ SafeDrive is a mobile-based driver behavior monitoring system that uses smartpho
   cd server
 2. Install dependencies:
 ```
-  npm install
+  npm install   #full install
 ```
 or 
 ```
-  npm install express
+  npm install express   #lightweight install
 ```
 3. Start the server:
  ```
