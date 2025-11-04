@@ -15,7 +15,6 @@ SafeDrive is a mobile-based driver behavior monitoring system that uses smartpho
 2. Install dependencies:
 ```
   npm install
-
 ```
 or 
 ```
@@ -24,7 +23,6 @@ or
 3. Start the server:
  ```
  node index.js
-
  ```
 5. Server will be running on localhost port 3000
    
