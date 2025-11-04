@@ -8,10 +8,13 @@ const PORT = 3000;
 // Initialize components
 const gpsListener = new GPSListener();
 const speedCalculator = new SpeedCalculator();
-const speedMonitor = new SpeedMonitor(gpsListener, speedCalculator);
 
+// Separate instances for speed monitoring to avoid state conflicts
+const monitorGPS = new GPSListener();
+const monitorSpeedCalc = new SpeedCalculator();
+const speedMonitor = new SpeedMonitor(monitorGPS, monitorSpeedCalc);
 app.get('/', (req, res) => {
-  res.send('Group 1F25 server is running');
+  res.send('Group 1F25 server is running 🚗💨');
 });
 
 // GPS endpoints
@@ -69,6 +72,8 @@ app.get('/monitor/history', (req, res) => {
     total_readings: speedMonitor.getSpeedHistory().length
   });
 });
+
+
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

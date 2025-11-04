@@ -49,6 +49,8 @@ class SpeedMonitor {
     if (this.isMonitoring) return;
     
     this.isMonitoring = true;
+    // Reset the speed calculator for monitoring
+    this.speedCalculator.reset();
     console.log("Speed monitoring started using real GPS data...");
     
     // Start GPS listening and calculate speed from real position changes
