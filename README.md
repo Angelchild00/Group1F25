@@ -13,20 +13,27 @@ SafeDrive is a mobile-based driver behavior monitoring system that uses smartpho
 1. Navigate to the server directory (vscode or terminal):
   cd server
 2. Install dependencies:
-  npm install  /   npm install express
+```
+  npm install
+
+```
+or 
+```
+  npm install express
+```
 3. Start the server:
-  node index.js
-5. Server will be running on http://localhost:3000
+ ```
+ node index.js
+
+ ```
+5. Server will be running on localhost port 3000
    
 ## API Endpoints
-1.GPS
 - GET /gps/start - Start GPS tracking
 - GET /gps/stop - Stop GPS tracking
 - GET /gps/current - Get current GPS data
-2.Speed
 - GET /speed/calculate - Calculate current speed
 - GET /speed/reset - Reset speed data
-3.Monitor
 - GET /monitor/start- Start monitoring
 - GET /monitor/stop - Stop monitoring
 - GET /monitor/history - Get monitoring history
